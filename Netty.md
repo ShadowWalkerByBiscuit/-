@@ -53,4 +53,5 @@ java提供的默认序列化技术Serialiazable接口存在缺陷：
 
 ### 底层源码细节  
 1-在构建netty代码中，用了很多反射，来构建实例，比如channel都是以class的形式传入的。  
-2-有两种不同的channelHandler，NIOServerSocketChannel是在第一阶段，处理多个客户端连接网路连接bossGroup的对象类型，对应的是handler，NIOSocketChannel是在后续WorkerGroup里面的channel，对应的是childHandler。
+2-有两种不同的channelHandler，NIOServerSocketChannel是在第一阶段，处理多个客户端连接网路连接bossGroup的对象类型，对应的是handler，NIOSocketChannel是在后续WorkerGroup里面的channel，对应的是childHandler。  
+3-backlog这个参数用来表示连接队列中（已连接，未连接）的总数，判断的一句是tcp三次握手的不同阶段。
