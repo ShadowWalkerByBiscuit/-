@@ -36,10 +36,21 @@ select/poll-fd询问阶段,升级版epoll）
 6-PipeLine，channel的处理链接，用于handler的绑定。
 7-Port，用于服务端最后的接口绑定bind（port）。
 8-host，那么客户端就要发起对服务器的请求，connect（host，port).sync(),表示阻塞在客户端阻塞。最后要记得关闭资源，包括future跟group。
-9-为了解决粘包问题，提供了Decoder，StringDecoder,LineBasedFrameDecoder，使用方式就是跟handler一起添加到channel的pipeLine。  
+9-为了解决粘包问题，提供了Decoder，StringDecoder,LineBasedFrameDecoder，使用方式就是跟handler一起添加到channel的pipeLine。   
 
 
 ### TCP/IP传输过程中的拆包/粘包的处理  
 简单的来说，就是需要的数据被拆分或者跟别的数据一起传输，但是对于网络传输来说是没有业务逻辑判断的，所以需要自己解决数据的问题。  
 
 
+### Netty编解码技术  
+java提供的默认序列化技术Serialiazable接口存在缺陷：  
+1-无法跨语言，只能在java之间进行传输。  
+2-编码后，流的大小，在相同的环境下，决定了传输的效率，java序列化编码之后的流很大，也就是效率低下。  
+3-编解码的性能，java对应的效率也不高。  
+总结：这样也侧面说明了，为什么rpc框架都有额外的序列化协议，而不是采用java默认。  
+比较出名的序列化协议有Google的Protobuf,Facebook的Thrift
+
+### 底层源码细节  
+1-在构建netty代码中，用了很多反射，来构建实例，比如channel都是以class的形式传入的。  
+2-有两种不同的channelHandler，NIOServerSocketChannel是在第一阶段，处理多个客户端连接网路连接bossGroup的对象类型，对应的是handler，NIOSocketChannel是在后续WorkerGroup里面的channel，对应的是childHandler。
