@@ -55,3 +55,13 @@ java提供的默认序列化技术Serialiazable接口存在缺陷：
 1-在构建netty代码中，用了很多反射，来构建实例，比如channel都是以class的形式传入的。  
 2-有两种不同的channelHandler，NIOServerSocketChannel是在第一阶段，处理多个客户端连接网路连接bossGroup的对象类型，对应的是handler，NIOSocketChannel是在后续WorkerGroup里面的channel，对应的是childHandler。  
 3-backlog这个参数用来表示连接队列中（已连接，未连接）的总数，判断的一句是tcp三次握手的不同阶段。
+
+### ByteBuf  
+1-从java的Buffer类衍生而来，对应的类叫ByteBuffer。  
+2-通过两个指针ReadIndex跟WriteIndex来控制缓存区域。  
+3-调用clear操作，并不会清空内存，而只是移动指针，这样可以减少操作。 
+
+###  注意点
+注册到selector是在I/O线程完成的，boss线程只是负责建立tcp链接。  
+
+
