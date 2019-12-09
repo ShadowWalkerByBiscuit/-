@@ -33,10 +33,10 @@ select/poll-fd询问阶段,升级版epoll）
 3-NIOServerSocketChannel，channel文件操作的容器对象。  
 4-ChannelOption，channel的设置选项。  
 5-ChannelHandler,处理channel数据的逻辑处理对象，采用的是事件机制，分别由channelActive，channelRead，exceptionCaught三个事件触发接口。  
-6-PipeLine，channel的处理链接，用于handler的绑定。
-7-Port，用于服务端最后的接口绑定bind（port）。
-8-host，那么客户端就要发起对服务器的请求，connect（host，port).sync(),表示阻塞在客户端阻塞。最后要记得关闭资源，包括future跟group。
-9-为了解决粘包问题，提供了Decoder，StringDecoder,LineBasedFrameDecoder，使用方式就是跟handler一起添加到channel的pipeLine。   
+6-PipeLine，channel的处理链接，用于handler的绑定。  
+7-Port，用于服务端最后的接口绑定bind（port）。  
+8-host，那么客户端就要发起对服务器的请求，connect（host，port).sync(),表示阻塞在客户端阻塞。最后要记得关闭资源，包括future跟group。  
+9-为了解决粘包问题，提供了Decoder，StringDecoder,LineBasedFrameDecoder，使用方式就是跟handler一起添加到channel的pipeLine。     
 
 
 ### TCP/IP传输过程中的拆包/粘包的处理  
