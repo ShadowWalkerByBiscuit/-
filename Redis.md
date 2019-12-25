@@ -25,24 +25,40 @@ Redis进行RDB的指令：
 
 Redis常用命令记录学习：   
 总结：P开头代表填的时间单位为毫秒，B开头代表是阻塞命令，M代表同时操作多个key，L,R代表对队列的左右操作。pf开头的是操作HyperLoglog。
-1-slowlog get x(记录数)获取最近x条慢查询记录。  
+1-slowlog get x(记录数)获取最近x条慢查询记录。可以通过命令slowlog reset清理掉所有保存的慢日志   
 2-info memory获取redis内存使用情况，  
 used_memory_rss_human代表整体使用的内存，包括内存碎片，redis本身程序使用的内存。  
 used_memory_peak_human:43.14M代表最多时候数据使用的总内存。  
 maxmemory_human设置的Redis可用的总内存。  
 maxmemory_policy内存满的时候使用的淘汰策略。  
 mem_fragmentation_ratio=used_memory_rss_human/used_memory_human也就代表了内存碎片的多少，如果太大说明内存碎片太多，如果<1那么说明出现了swap，出现了内存跟硬盘的交换，是比较危险的，因为硬盘的数据跟内存差了很多个数量级会出现阻塞。   
+同理的还有info stats，获取的是redis的统计信息。   
 
 3-expire跟persist相对于，用于设置过期时间跟删除过期时间（永久生效）。  
+
 4-RENAME要注意的是，如果新的名字存在则会被覆盖。RENAMENX就限制了新的名字只能是不存在的，否则报错。   
+
 5-sort默认是对数字进行排序，如果要对字符串排序的话，那么在后面显式的加上ALPHA字段。sort也支持limit offset 和 count 两个参数。  
+
 6-scan返回值为0说明完成了一个完整的遍历，MATCH 可以帮助筛选匹配的值。  
+
 7-get 如果 key 不存在那么返回特殊值 nil 。  
+
 8-MGET就是一次查询多个key。MSET就是一次设置多个值。  
-9-SET key value [EX seconds] [PX milliseconds] [NX|XX] ，EX后面跟秒单位，PX后面跟毫秒单位，NX代表key不存在才执行，XX代表key存在才执行。  
+
+9-SET key value [EX seconds] [PX milliseconds] [NX|XX] ，EX后面跟秒单位，PX后面跟毫秒单位，NX代表key不存在才执行，XX代表key存在才执行。 
+
 10-HKEYS跟HVALS分别获取Hash中的Key跟value值。  
-11-LREM vale count 移除count个跟value相等的元素。如果count=0，那么就是移除所有跟value相等的元素。  
+
+11-LREM vale count 移除count个跟value相等的元素。如果count=0，那么就是移除所有跟value相等的元素。 
+
 12-Redis 的 HyperLogLog 提供了一种不太准确的基数统计方法（比如网站的访问量） ，它的标准误差是 0.81%，只需要 12K 内存。 
+
+13-rename可以屏蔽掉一些生产上禁忌使用的指令（通过设置成""来屏蔽）如keys，hgetall。flushall，flushdb这种操作是很危险的。  
+
+14-redis-cli --bigkeys 这样来分析数据库中的bigkeys。同时为了删除bigkye不要直接del，需要通过scan+rem的方法。    
+
+15-cluster meet这个是组件集群的时候，链接其他节点的命令。  
 
 
 
