@@ -17,6 +17,7 @@
 
 spring有个注明的循环依赖问题，简单来说就是A初始化一个对象a的时候，A里面有依赖属性B，那么就要初始化一个b给a，如果B中也有一个属性A，那么就会出现死循环（单例的前提下，如果不是单例，那么完全可以存多个不同的a或者b）。但是这种依赖又是允许存在的，解决办法就是提前曝光，设置了几个缓冲区，标注哪些bean是在初始化中，比如上面b要注入a的时候，将a提前曝光，告诉b，直接拿缓存中的a去用就好了不需要帮a初始化了，因为之前a已经在初始化过程中了。   
 
+spring事物中三大类，PlatFormTransactionManager（抽象层，通过数据库配置那里定义注册具体的子类，可以设置事物传播级别），TransactionDefinition（一般使用默认的DefaultTransactionDefinition），TransactionStatus用来表明事物的状态。   
 
 
 
