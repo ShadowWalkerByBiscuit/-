@@ -24,8 +24,10 @@ Redis进行RDB的指令：
 因为AOF是根据时间不断累加的，这样就会造成堆积，Redis提供了精简优化的rewrite方法，生成一份新的AOF文件，保证新旧两份文件对于Redis数据状态来说是一致的，但是新文件通常小得多（只要最后数据一致，多条命令最终状态，那么一条命令就可以替换掉。）AOF 文件重写并不需要对现有的 AOF 文件进行任何读取、分析或者写入操作，而是通过读取服务器当前的数据库状态来实现的。首先从数据库中读取键现在的值，然后用一条命令去记录键值对，代替之前记录这个键值对的多条命令，这就是 AOF 重写功能的实现原理。
 
 Redis常用命令记录学习：   
-总结：P开头代表填的时间单位为毫秒，B开头代表是阻塞命令，M代表同时操作多个key，L,R代表对队列的左右操作。pf开头的是操作HyperLoglog。
-1-slowlog get x(记录数)获取最近x条慢查询记录。可以通过命令slowlog reset清理掉所有保存的慢日志   
+总结：P开头代表填的时间单位为毫秒，B开头代表是阻塞命令，M代表同时操作多个key，L,R代表对队列的左右操作。pf开头的是操作HyperLoglog。   
+
+1-slowlog get x(记录数)获取最近x条慢查询记录。可以通过命令slowlog reset清理掉所有保存的慢日志    
+
 2-info memory获取redis内存使用情况，  
 used_memory_rss_human代表整体使用的内存，包括内存碎片，redis本身程序使用的内存。  
 used_memory_peak_human:43.14M代表最多时候数据使用的总内存。  
@@ -61,7 +63,13 @@ mem_fragmentation_ratio=used_memory_rss_human/used_memory_human也就代表了�
 
 14-redis-cli --bigkeys 这样来分析数据库中的bigkeys。同时为了删除bigkye不要直接del，需要通过scan+rem的方法。    
 
-15-cluster meet这个是组件集群的时候，链接其他节点的命令。  
+15-cluster meet这个是组件集群的时候，链接其他节点的命令。    
+
+redis事物中：   
+整体流程1-开启事物MULTI 2-放入队列（并没有执行） 3-执行EXEC   
+也可以在EXEC之前调用DISCARD，意为放弃事物，命令还没开始执行，实际的操作只是清空了队列而已。  
+因为redis只保证单条命令的原子性，但是事物不保证原子性。举个例子5条执行，前两条执行成功，第三条失败了，那么成功的不会回滚，后面的两条也会继续执行。直观效果就是，第三条失败了而已。  
+还有在开启事物之后，可以对key进行监控，使用WATCH指令，如果监控的key在EXEC之前，对应的value发生了改变，那么就放弃整个事物。相对应的还有UNWATCH指令。
 
 
 
